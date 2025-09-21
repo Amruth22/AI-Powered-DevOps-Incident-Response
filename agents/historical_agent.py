@@ -122,56 +122,83 @@ class HistoricalAgent(BaseIncidentAgent):
             }
     
     def _format_historical_data(self, data: Dict[str, Any]) -> str:
-        """Format historical data for AI analysis"""
+        """Format historical data for AI analysis - Fixed version"""
         try:
             formatted = []
             
-            # Format similar incidents
-            if "similar_incidents" in data and "error" not in data.get("similar_incidents", {}):
-                similar = data["similar_incidents"]
-                incidents = similar.get('similar_incidents', []) if isinstance(similar, dict) else []
-                
-                formatted.append(f"SIMILAR INCIDENTS:")
-                if incidents:
-                    formatted.append(f"- Found {len(incidents)} similar incidents")
-                    for incident in incidents[:3]:
-                        if isinstance(incident, dict):
-                            formatted.append(f"  • {incident.get('summary', 'Unknown')}")
-                            formatted.append(f"    Resolution: {incident.get('resolution', 'Unknown')}")
-                            formatted.append(f"    Success: {incident.get('success_rate', 'Unknown')}")
-                        else:
-                            formatted.append(f"  • {str(incident)}")
-                else:
-                    formatted.append("- No similar incidents found")
-            
-            # Format PagerDuty history
-            if "pagerduty_history" in data and "error" not in data.get("pagerduty_history", {}):
-                pagerduty = data["pagerduty_history"]
-                incidents = pagerduty.get('incidents', []) if isinstance(pagerduty, dict) else []
-                
-                formatted.append(f"PAGERDUTY HISTORY:")
-                if incidents:
-                    formatted.append(f"- Historical incidents: {len(incidents)}")
-                    
-                    # Group by service
-                    service_incidents = {}
-                    for incident in incidents:
-                        if isinstance(incident, dict):
-                            service = incident.get('service', 'Unknown')
-                            if service not in service_incidents:
-                                service_incidents[service] = 0
-                            service_incidents[service] += 1
-                    
-                    if service_incidents:
-                        formatted.append("- By service:")
-                        for service, count in list(service_incidents.items())[:3]:
-                            formatted.append(f"  • {service}: {count} incidents")
-                else:
-                    formatted.append("- No historical incidents found")
-            
-            # Handle error case
+            # Handle error case first
             if "error" in data:
                 formatted.append(f"HISTORICAL DATA ERROR: {data['error']}")
+                return "\n".join(formatted)
+            
+            # Format similar incidents - with safe data handling
+            if "similar_incidents" in data:
+                similar = data["similar_incidents"]
+                
+                # Handle different data structures safely
+                if isinstance(similar, dict) and "error" not in similar:
+                    incidents = similar.get('similar_incidents', [])
+                    
+                    formatted.append(f"SIMILAR INCIDENTS:")
+                    if incidents and isinstance(incidents, list):
+                        formatted.append(f"- Found {len(incidents)} similar incidents")
+                        for i, incident in enumerate(incidents[:3]):
+                            try:
+                                if isinstance(incident, dict):
+                                    summary = str(incident.get('summary', f'Incident {i+1}'))
+                                    resolution = str(incident.get('resolution', 'Unknown'))
+                                    success_rate = str(incident.get('success_rate', 'Unknown'))
+                                    
+                                    formatted.append(f"  • {summary}")
+                                    formatted.append(f"    Resolution: {resolution}")
+                                    formatted.append(f"    Success: {success_rate}")
+                                else:
+                                    formatted.append(f"  • {str(incident)}")
+                            except Exception as e:
+                                formatted.append(f"  • Error processing incident: {str(e)}")
+                    else:
+                        formatted.append("- No similar incidents found")
+                else:
+                    formatted.append("SIMILAR INCIDENTS: Data unavailable")
+            
+            # Format PagerDuty history - with safe data handling
+            if "pagerduty_history" in data:
+                pagerduty = data["pagerduty_history"]
+                
+                if isinstance(pagerduty, dict) and "error" not in pagerduty:
+                    incidents = pagerduty.get('incidents', [])
+                    
+                    formatted.append(f"PAGERDUTY HISTORY:")
+                    if incidents and isinstance(incidents, list):
+                        formatted.append(f"- Historical incidents: {len(incidents)}")
+                        
+                        # Group by service - with safe processing
+                        service_incidents = {}
+                        for incident in incidents:
+                            try:
+                                if isinstance(incident, dict):
+                                    service_name = str(incident.get('service', 'Unknown'))
+                                    # Use string as key to avoid unhashable type error
+                                    if service_name not in service_incidents:
+                                        service_incidents[service_name] = 0
+                                    service_incidents[service_name] += 1
+                            except Exception:
+                                # Skip problematic incidents silently
+                                continue
+                        
+                        if service_incidents:
+                            formatted.append("- By service:")
+                            # Convert to list safely to avoid iteration issues
+                            try:
+                                service_items = list(service_incidents.items())[:3]
+                                for service_name, count in service_items:
+                                    formatted.append(f"  • {service_name}: {count} incidents")
+                            except Exception:
+                                formatted.append("  • Error processing service breakdown")
+                    else:
+                        formatted.append("- No historical incidents found")
+                else:
+                    formatted.append("PAGERDUTY HISTORY: Data unavailable")
             
             return "\n".join(formatted) if formatted else "No historical data available"
             
