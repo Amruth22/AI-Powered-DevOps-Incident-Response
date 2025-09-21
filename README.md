@@ -38,6 +38,7 @@ AI-Powered-DevOps-Incident-Response/
 │   └── parallel_workflow.py# Main workflow logic
 ├── utils/                   # ✅ Utility functions
 │   └── logging_utils.py    # Logging configuration
+├── .env.example             # Environment configuration template
 └── main.py                  # Application entry point
 ```
 
@@ -108,15 +109,27 @@ mkdir logs
 
 ### **Configuration**
 
-#### **Environment Setup**
+#### **Environment Setup (.env file)**
 ```bash
-# Set your Gemini API key
-export GEMINI_API_KEY="your-gemini-api-key-here"
+# 1. Copy the example environment file
+cp .env.example .env
 
-# Optional: Set other configuration
-export AUTO_REMEDIATION_THRESHOLD="0.6"
-export MAX_RETRIES="3"
-export LOG_LEVEL="INFO"
+# 2. Edit .env with your actual credentials
+nano .env  # or use your preferred editor
+```
+
+#### **Required Environment Variables (.env file)**
+```bash
+# Required - Get from Google AI Studio
+GEMINI_API_KEY=your-gemini-api-key-here
+
+# Optional - Has defaults
+GEMINI_MODEL=gemini-2.0-flash
+MOCK_API_BASE_URL=http://localhost:8000
+AUTO_REMEDIATION_THRESHOLD=0.6
+MAX_RETRIES=3
+LOG_LEVEL=INFO
+LOG_FILE=logs/incident_response.log
 ```
 
 #### **Getting API Keys**
@@ -125,6 +138,9 @@ export LOG_LEVEL="INFO"
 ### **Usage**
 
 ```bash
+# Check configuration
+python main.py --config
+
 # Test the system
 python main.py --test
 
@@ -137,6 +153,8 @@ python main.py --demo
 # Interactive mode
 python main.py
 ```
+
+**Note**: The system will automatically check for `.env` file and validate your configuration on startup.
 
 ## 🤖 **Specialized Agents**
 
@@ -208,15 +226,27 @@ Total:                 ~12-15 seconds
 
 ## 🔧 **Configuration Options**
 
-```python
-# System thresholds (environment variables)
-AUTO_REMEDIATION_THRESHOLD = 0.6    # AI confidence for auto-remediation
-MAX_RETRIES = 3                     # Maximum retry attempts
-LOG_LEVEL = "INFO"                  # Logging level
+All configuration is managed through the `.env` file:
 
-# AI model configuration
-GEMINI_MODEL = "gemini-2.0-flash"   # Gemini model version
-MOCK_API_BASE_URL = "http://localhost:8000"  # Mock API endpoint
+```bash
+# AI Configuration
+GEMINI_API_KEY=your-api-key-here
+GEMINI_MODEL=gemini-2.0-flash
+
+# System Thresholds
+AUTO_REMEDIATION_THRESHOLD=0.6    # AI confidence for auto-remediation
+MAX_RETRIES=3                     # Maximum retry attempts
+
+# Performance Settings
+MAX_PARALLEL_INCIDENTS=5          # Max concurrent incidents
+ESCALATION_TIMEOUT=30             # Escalation timeout (minutes)
+
+# Logging
+LOG_LEVEL=INFO                    # Logging level
+LOG_FILE=logs/incident_response.log  # Log file path
+
+# Mock API (for testing)
+MOCK_API_BASE_URL=http://localhost:8000
 ```
 
 ## 🧪 **Demo Scenarios**
@@ -236,8 +266,9 @@ MOCK_API_BASE_URL = "http://localhost:8000"  # Mock API endpoint
 - ✅ **Comprehensive error handling**
 
 ### **Operational Features**
+- ✅ **Environment-based configuration** with `.env` files
+- ✅ **Configuration validation** with helpful error messages
 - ✅ **Structured logging** with configurable levels
-- ✅ **Environment-based configuration**
 - ✅ **Parallel agent execution** for performance
 - ✅ **Mock API integration** for testing
 - ✅ **Interactive demo modes**
@@ -245,13 +276,20 @@ MOCK_API_BASE_URL = "http://localhost:8000"  # Mock API endpoint
 ## 🚀 **Getting Started**
 
 ```bash
-# Try the demo
+# 1. Setup configuration
+cp .env.example .env
+nano .env  # Add your GEMINI_API_KEY
+
+# 2. Check configuration
+python main.py --config
+
+# 3. Try the demo
 python main.py --demo
 
-# Process a real incident
+# 4. Process a real incident
 python main.py "Your incident alert here"
 
-# Run system test
+# 5. Run system test
 python main.py --test
 ```
 
