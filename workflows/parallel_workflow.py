@@ -78,11 +78,24 @@ class ParallelIncidentWorkflow:
             parallel_start = time.time()
             
             # Execute all 3 analysis agents in parallel using asyncio.gather
-            detective_result, diagnostics_result, historical_result = await asyncio.gather(
+            # Use return_exceptions=True to handle individual agent failures gracefully
+            results = await asyncio.gather(
                 self.agents["detective"].execute_async(state),
                 self.agents["diagnostics"].execute_async(state),
-                self.agents["historical"].execute_async(state)
+                self.agents["historical"].execute_async(state),
+                return_exceptions=True
             )
+            
+            # Process results and handle any exceptions
+            detective_result = results[0] if not isinstance(results[0], Exception) else {
+                "agent": "detective", "error": str(results[0]), "success": False, "confidence": 0.5
+            }
+            diagnostics_result = results[1] if not isinstance(results[1], Exception) else {
+                "agent": "diagnostics", "error": str(results[1]), "success": False, "health_score": 0.5
+            }
+            historical_result = results[2] if not isinstance(results[2], Exception) else {
+                "agent": "historical", "error": str(results[2]), "success": False, "pattern_confidence": 0.5
+            }
             
             parallel_time = time.time() - parallel_start
             
@@ -96,6 +109,11 @@ class ParallelIncidentWorkflow:
             logger.info(f"   🔧 Diagnostics: {diagnostics_result.get('health_score', 0):.2f} health score")
             logger.info(f"   📚 Historical: {historical_result.get('pattern_confidence', 0):.2f} pattern confidence")
             
+            # Log any agent errors
+            for result in [detective_result, diagnostics_result, historical_result]:
+                if not result.get('success', True):
+                    logger.warning(f"   ⚠️ {result.get('agent', 'Unknown')} agent had errors: {result.get('error', 'Unknown error')}")
+            
             # Calculate overall confidence
             overall_confidence = calculate_overall_confidence(state)
             logger.info(f"📈 OVERALL CONFIDENCE: {overall_confidence:.2f}")
@@ -103,7 +121,14 @@ class ParallelIncidentWorkflow:
             # Phase 2: REMEDIATION PLANNING
             logger.info(f"🤖 PHASE 2: REMEDIATION PLANNING")
             
-            remediation_result = await self.agents["remediation"].execute_async(state)
+            try:
+                remediation_result = await self.agents["remediation"].execute_async(state)
+            except Exception as e:
+                logger.error(f"Remediation agent error: {e}")
+                remediation_result = {
+                    "agent": "remediation", "error": str(e), "success": False, "remediation_confidence": 0.3
+                }
+            
             add_agent_result(state, "remediation", remediation_result)
             
             logger.info(f"   ✅ Remediation: {remediation_result.get('remediation_confidence', 0):.2f} remediation confidence")
@@ -111,7 +136,14 @@ class ParallelIncidentWorkflow:
             # Phase 3: COMMUNICATION PLANNING
             logger.info(f"📢 PHASE 3: COMMUNICATION PLANNING")
             
-            communication_result = await self.agents["communication"].execute_async(state)
+            try:
+                communication_result = await self.agents["communication"].execute_async(state)
+            except Exception as e:
+                logger.error(f"Communication agent error: {e}")
+                communication_result = {
+                    "agent": "communication", "error": str(e), "success": False, "communication_confidence": 0.5
+                }
+            
             add_agent_result(state, "communication", communication_result)
             
             logger.info(f"   ✅ Communication: {communication_result.get('communication_confidence', 0):.2f} communication confidence")
@@ -129,7 +161,11 @@ class ParallelIncidentWorkflow:
                 logger.info(f"   ✅ PARALLEL AUTO-REMEDIATION APPROVED")
                 
                 # Execute remediation
-                remediation_execution = await self.agents["remediation"].execute_remediation(state)
+                try:
+                    remediation_execution = await self.agents["remediation"].execute_remediation(state)
+                except Exception as e:
+                    logger.error(f"Remediation execution error: {e}")
+                    remediation_execution = {"success": False, "error": str(e)}
                 
                 if remediation_execution.get('success', False):
                     self.metrics["auto_remediated_count"] += 1
@@ -141,7 +177,14 @@ class ParallelIncidentWorkflow:
                     # Phase 5: Post-Mortem Analysis (for successful resolutions)
                     logger.info(f"📝 PHASE 5: POST-MORTEM ANALYSIS")
                     
-                    postmortem_result = await self.agents["postmortem"].execute_async(state)
+                    try:
+                        postmortem_result = await self.agents["postmortem"].execute_async(state)
+                    except Exception as e:
+                        logger.error(f"Post-mortem agent error: {e}")
+                        postmortem_result = {
+                            "agent": "postmortem", "error": str(e), "success": False, "documentation_confidence": 0.5
+                        }
+                    
                     add_agent_result(state, "postmortem", postmortem_result)
                     
                     logger.info(f"   ✅ Post-Mortem: {postmortem_result.get('documentation_confidence', 0):.2f} documentation confidence")
