@@ -7,12 +7,13 @@ Professional parallel multi-agent system with CrewAI and Gemini LLM
 import sys
 import argparse
 import asyncio
+import os
 from datetime import datetime
 
 from workflows.parallel_workflow import process_incident_parallel
 from services.mock.client import mock_api_client
 from utils.logging_utils import setup_logging
-from core.config import config, validate_config
+from core.config import config, validate_config, print_config_status
 
 def main():
     """Main application entry point"""
@@ -25,6 +26,7 @@ Examples:
   python main.py "Payment API database timeout"
   python main.py --demo
   python main.py --test
+  python main.py --config  # Show configuration status
         """
     )
     
@@ -42,6 +44,13 @@ Examples:
         help="Run system test with generated incident"
     )
     
+    # Config option
+    parser.add_argument(
+        "--config", "-c",
+        action="store_true",
+        help="Show current configuration status"
+    )
+    
     # Alert text (positional argument)
     parser.add_argument(
         "alert", 
@@ -51,16 +60,29 @@ Examples:
     
     args = parser.parse_args()
     
+    # Show configuration status if requested
+    if args.config:
+        print_config_status()
+        return
+    
+    # Check if .env file exists
+    if not os.path.exists('.env'):
+        print("⚠️  .env file not found!")
+        print("\n💡 Setup Instructions:")
+        print("1. Copy the example file: cp .env.example .env")
+        print("2. Edit .env and update GEMINI_API_KEY with your actual key")
+        print("3. Get your API key from: https://makersuite.google.com/app/apikey")
+        print("4. Run the application again")
+        sys.exit(1)
+    
     # Validate configuration
     try:
         validate_config()
         print("✅ Configuration validated successfully")
     except ValueError as e:
         print(f"❌ Configuration Error: {e}")
-        print("\n💡 Setup Instructions:")
-        print("1. Set GEMINI_API_KEY environment variable")
-        print("2. Optionally set other configuration variables")
-        print("3. Run the application again")
+        print("\n🔧 Current Configuration Status:")
+        print_config_status()
         sys.exit(1)
     
     # Setup logging
@@ -136,6 +158,8 @@ async def run_test():
             
         else:
             print("❌ Could not generate test incident")
+            print("💡 Make sure the mock API server is running:")
+            print("   python -m mock_apis.main  # If you have the mock server")
             
     except Exception as e:
         print(f"❌ Test error: {e}")
@@ -213,9 +237,10 @@ async def run_interactive_mode():
     print("  1. Process Incident Alert")
     print("  2. Interactive Demo")
     print("  3. System Test")
+    print("  4. Show Configuration")
     print("  0. Exit")
     
-    choice = input("\nSelect option (0-3): ").strip()
+    choice = input("\nSelect option (0-4): ").strip()
     
     if choice == "0":
         print("👋 Goodbye!")
@@ -230,6 +255,8 @@ async def run_interactive_mode():
         await run_demo()
     elif choice == "3":
         await run_test()
+    elif choice == "4":
+        print_config_status()
     else:
         print("❌ Invalid choice")
 
