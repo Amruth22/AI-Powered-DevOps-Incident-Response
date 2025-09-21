@@ -38,7 +38,7 @@ class HistoricalAgent(BaseIncidentAgent):
         - Service: {incident_data.get('service', 'unknown')}
         - Type: {incident_data.get('type', 'unknown')}
         - Severity: {incident_data.get('severity', 'unknown')}
-        - Symptoms: {', '.join(incident_data.get('symptoms', []))}
+        - Symptoms: {self._safe_join_symptoms(incident_data.get('symptoms', []))}
         
         HISTORICAL DATA:
         {self._format_historical_data(historical_data)}
@@ -68,59 +68,113 @@ class HistoricalAgent(BaseIncidentAgent):
             "historical_data": historical_data
         }
     
+    def _safe_join_symptoms(self, symptoms) -> str:
+        """Safely join symptoms list, handling various data types"""
+        try:
+            if not symptoms:
+                return "No symptoms provided"
+            
+            # Handle list of strings
+            if isinstance(symptoms, list):
+                return ', '.join(str(symptom) for symptom in symptoms if symptom)
+            
+            # Handle single string
+            if isinstance(symptoms, str):
+                return symptoms
+            
+            # Handle other types
+            return str(symptoms)
+            
+        except Exception:
+            return "Unable to process symptoms"
+    
     async def _gather_historical_data_async(self, incident_data: Dict[str, Any]) -> Dict[str, Any]:
         """Gather historical incident data asynchronously"""
-        incident_type = incident_data.get('type', 'unknown')
-        service = incident_data.get('service', 'unknown')
-        
-        # Run API calls in executor to avoid blocking
-        loop = asyncio.get_event_loop()
-        historical_data = await loop.run_in_executor(
-            None, get_historical_incident_data, incident_type, service
-        )
-        
-        return historical_data
+        try:
+            # Safely extract incident type and service
+            incident_type = incident_data.get('type', 'unknown')
+            service = incident_data.get('service', 'unknown')
+            
+            # Ensure we have string values (handle dict or other types)
+            if isinstance(incident_type, dict):
+                incident_type = incident_type.get('name', 'unknown')
+            incident_type = str(incident_type) if incident_type else 'unknown'
+            
+            if isinstance(service, dict):
+                service = service.get('name', 'unknown')
+            service = str(service) if service else 'unknown'
+            
+            # Run API calls in executor to avoid blocking
+            loop = asyncio.get_event_loop()
+            historical_data = await loop.run_in_executor(
+                None, get_historical_incident_data, incident_type, service
+            )
+            
+            return historical_data if historical_data else {}
+            
+        except Exception as e:
+            self.logger.error(f"Error gathering historical data: {e}")
+            # Return empty data structure to prevent workflow failure
+            return {
+                "error": f"Failed to gather historical data: {str(e)}",
+                "similar_incidents": {"similar_incidents": []},
+                "pagerduty_history": {"incidents": []}
+            }
     
     def _format_historical_data(self, data: Dict[str, Any]) -> str:
         """Format historical data for AI analysis"""
-        formatted = []
-        
-        # Format similar incidents
-        if "similar_incidents" in data and "error" not in data["similar_incidents"]:
-            similar = data["similar_incidents"]
-            incidents = similar.get('similar_incidents', [])
+        try:
+            formatted = []
             
-            formatted.append(f"SIMILAR INCIDENTS:")
-            if incidents:
-                formatted.append(f"- Found {len(incidents)} similar incidents")
-                for incident in incidents[:3]:
-                    formatted.append(f"  • {incident.get('summary', 'Unknown')}")
-                    formatted.append(f"    Resolution: {incident.get('resolution', 'Unknown')}")
-                    formatted.append(f"    Success: {incident.get('success_rate', 'Unknown')}")
-            else:
-                formatted.append("- No similar incidents found")
-        
-        # Format PagerDuty history
-        if "pagerduty_history" in data and "error" not in data["pagerduty_history"]:
-            pagerduty = data["pagerduty_history"]
-            incidents = pagerduty.get('incidents', [])
+            # Format similar incidents
+            if "similar_incidents" in data and "error" not in data.get("similar_incidents", {}):
+                similar = data["similar_incidents"]
+                incidents = similar.get('similar_incidents', []) if isinstance(similar, dict) else []
+                
+                formatted.append(f"SIMILAR INCIDENTS:")
+                if incidents:
+                    formatted.append(f"- Found {len(incidents)} similar incidents")
+                    for incident in incidents[:3]:
+                        if isinstance(incident, dict):
+                            formatted.append(f"  • {incident.get('summary', 'Unknown')}")
+                            formatted.append(f"    Resolution: {incident.get('resolution', 'Unknown')}")
+                            formatted.append(f"    Success: {incident.get('success_rate', 'Unknown')}")
+                        else:
+                            formatted.append(f"  • {str(incident)}")
+                else:
+                    formatted.append("- No similar incidents found")
             
-            formatted.append(f"PAGERDUTY HISTORY:")
-            if incidents:
-                formatted.append(f"- Historical incidents: {len(incidents)}")
+            # Format PagerDuty history
+            if "pagerduty_history" in data and "error" not in data.get("pagerduty_history", {}):
+                pagerduty = data["pagerduty_history"]
+                incidents = pagerduty.get('incidents', []) if isinstance(pagerduty, dict) else []
                 
-                # Group by service
-                service_incidents = {}
-                for incident in incidents:
-                    service = incident.get('service', 'Unknown')
-                    if service not in service_incidents:
-                        service_incidents[service] = 0
-                    service_incidents[service] += 1
-                
-                formatted.append("- By service:")
-                for service, count in list(service_incidents.items())[:3]:
-                    formatted.append(f"  • {service}: {count} incidents")
-            else:
-                formatted.append("- No historical incidents found")
-        
-        return "\n".join(formatted) if formatted else "No historical data available"
+                formatted.append(f"PAGERDUTY HISTORY:")
+                if incidents:
+                    formatted.append(f"- Historical incidents: {len(incidents)}")
+                    
+                    # Group by service
+                    service_incidents = {}
+                    for incident in incidents:
+                        if isinstance(incident, dict):
+                            service = incident.get('service', 'Unknown')
+                            if service not in service_incidents:
+                                service_incidents[service] = 0
+                            service_incidents[service] += 1
+                    
+                    if service_incidents:
+                        formatted.append("- By service:")
+                        for service, count in list(service_incidents.items())[:3]:
+                            formatted.append(f"  • {service}: {count} incidents")
+                else:
+                    formatted.append("- No historical incidents found")
+            
+            # Handle error case
+            if "error" in data:
+                formatted.append(f"HISTORICAL DATA ERROR: {data['error']}")
+            
+            return "\n".join(formatted) if formatted else "No historical data available"
+            
+        except Exception as e:
+            self.logger.error(f"Error formatting historical data: {e}")
+            return f"Error formatting historical data: {str(e)}"
