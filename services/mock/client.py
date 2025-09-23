@@ -41,13 +41,17 @@ class MockAPIClient:
     # INCIDENT GENERATION
     # ============================================================================
     
-    def generate_incident(self, scenario_type: str = None) -> Dict[str, Any]:
-        """Generate a test incident"""
-        data = {"scenario_type": scenario_type} if scenario_type else {}
+    def generate_incident(self, scenario_type: str = None, ai_test_mode: str = None) -> Dict[str, Any]:
+        """Generate a test incident with AI optimization"""
+        data = {}
+        if scenario_type:
+            data["scenario_type"] = scenario_type
+        if ai_test_mode:
+            data["ai_test_mode"] = ai_test_mode
         return self._make_request("/chaos/generate-incident", method="POST", data=data)
     
     def get_active_incidents(self) -> List[Dict[str, Any]]:
-        """Get active incidents from chaos engineering"""
+        """Get active incidents from chaos engineering with AI analysis"""
         try:
             result = self._make_request("/chaos/active-incidents")
             if "error" not in result:
@@ -125,6 +129,22 @@ class MockAPIClient:
         """Create incident-specific Slack channel"""
         data = {"incident_id": incident_id}
         return self._make_request("/slack/create-incident-channel", method="POST", data=data)
+
+    def resolve_incident(self, incident_id: str, resolution_method: str = "auto", ai_performance_data: Dict[str, Any] = None) -> Dict[str, Any]:
+        """Resolve incident with AI performance tracking"""
+        data = {
+            "resolution_method": resolution_method
+        }
+        if ai_performance_data:
+            data["ai_performance_data"] = ai_performance_data
+        return self._make_request(f"/chaos/resolve-incident/{incident_id}", method="POST", data=data)
+    
+    def generate_multi_service_incident(self, ai_test_mode: str = None) -> Dict[str, Any]:
+        """Generate complex multi-service incident"""
+        data = {}
+        if ai_test_mode:
+            data["ai_test_mode"] = ai_test_mode
+        return self._make_request("/chaos/generate-multi-service-incident", method="POST", data=data)
 
 # Global client instance
 mock_api_client = MockAPIClient()
