@@ -16,55 +16,55 @@ from utils.logging_utils import setup_logging
 
 async def test_configuration():
     """Test system configuration"""
-    print("🔧 Testing Configuration...")
+    print("Testing Configuration...")
     
     try:
         validate_config()
-        print("✅ Configuration validation passed")
+        print("SUCCESS: Configuration validation passed")
         return True
     except Exception as e:
-        print(f"❌ Configuration validation failed: {e}")
+        print(f"ERROR: Configuration validation failed: {e}")
         return False
 
 async def test_gemini_connection():
     """Test Gemini AI connection"""
-    print("\n🧠 Testing Gemini AI Connection...")
+    print("\nTesting Gemini AI Connection...")
     
     try:
         if test_gemini_connection():
-            print("✅ Gemini AI connection successful")
+            print("SUCCESS: Gemini AI connection successful")
             return True
         else:
-            print("❌ Gemini AI connection failed")
+            print("ERROR: Gemini AI connection failed")
             return False
     except Exception as e:
-        print(f"❌ Gemini AI connection error: {e}")
+        print(f"ERROR: Gemini AI connection error: {e}")
         return False
 
 async def test_mock_api():
     """Test mock API connection"""
-    print("\n🔌 Testing Mock API Connection...")
+    print("\nTesting Mock API Connection...")
     
     try:
         # Try to generate a test incident
         incident = mock_api_client.generate_incident("database_timeout")
         
         if "error" not in incident:
-            print(f"✅ Mock API connection successful")
+            print(f"SUCCESS: Mock API connection successful")
             print(f"   Generated test incident: {incident.get('incident_id', 'Unknown')}")
             return True, incident
         else:
-            print(f"❌ Mock API error: {incident['error']}")
+            print(f"ERROR: Mock API error: {incident['error']}")
             return False, None
     except Exception as e:
-        print(f"❌ Mock API connection failed: {e}")
-        print("💡 Make sure the mock API server is running:")
+        print(f"ERROR: Mock API connection failed: {e}")
+        print("HINT: Make sure the mock API server is running:")
         print("   python -m mock_apis.main  # If you have the mock server")
         return False, None
 
 async def test_parallel_workflow(test_incident):
     """Test the parallel workflow"""
-    print("\n🚀 Testing Parallel Workflow...")
+    print("\nTesting Parallel Workflow...")
     
     try:
         start_time = datetime.now()
@@ -74,7 +74,7 @@ async def test_parallel_workflow(test_incident):
         end_time = datetime.now()
         duration = (end_time - start_time).total_seconds()
         
-        print(f"✅ Parallel workflow completed in {duration:.2f} seconds")
+        print(f"SUCCESS: Parallel workflow completed in {duration:.2f} seconds")
         print(f"   • Status: {result.get('status', 'Unknown')}")
         print(f"   • Method: {result.get('method', 'Unknown')}")
         print(f"   • Success: {result.get('success', False)}")
@@ -93,14 +93,14 @@ async def test_parallel_workflow(test_incident):
         return True
         
     except Exception as e:
-        print(f"❌ Parallel workflow test failed: {e}")
+        print(f"ERROR: Parallel workflow test failed: {e}")
         import traceback
         traceback.print_exc()
         return False
 
 async def test_individual_agents():
     """Test individual agents"""
-    print("\n🤖 Testing Individual Agents...")
+    print("\nTesting Individual Agents...")
     
     # Create test incident data
     test_data = {
@@ -128,21 +128,21 @@ async def test_individual_agents():
             try:
                 result = await agent.execute_async(test_data)
                 if result.get('success', False):
-                    print(f"   ✅ {agent_name} Agent: Working")
+                    print(f"   SUCCESS: {agent_name} Agent: Working")
                 else:
-                    print(f"   ⚠️ {agent_name} Agent: Error - {result.get('error', 'Unknown')}")
+                    print(f"   WARNING: {agent_name} Agent: Error - {result.get('error', 'Unknown')}")
             except Exception as e:
-                print(f"   ❌ {agent_name} Agent: Failed - {str(e)}")
+                print(f"   ERROR: {agent_name} Agent: Failed - {str(e)}")
         
         return True
         
     except Exception as e:
-        print(f"❌ Agent testing failed: {e}")
+        print(f"ERROR: Agent testing failed: {e}")
         return False
 
 async def main():
     """Main test function"""
-    print("🧪 AI-POWERED DEVOPS INCIDENT RESPONSE SYSTEM TEST")
+    print("AI-POWERED DEVOPS INCIDENT RESPONSE SYSTEM TEST")
     print("=" * 60)
     
     # Setup logging
@@ -151,20 +151,20 @@ async def main():
     # Test configuration
     config_ok = await test_configuration()
     if not config_ok:
-        print("\n❌ Configuration test failed - cannot continue")
+        print("\nERROR: Configuration test failed - cannot continue")
         print_config_status()
         sys.exit(1)
     
     # Test Gemini connection
     gemini_ok = await test_gemini_connection()
     if not gemini_ok:
-        print("\n❌ Gemini AI test failed - cannot continue")
+        print("\nERROR: Gemini AI test failed - cannot continue")
         sys.exit(1)
     
     # Test individual agents
     agents_ok = await test_individual_agents()
     if not agents_ok:
-        print("\n⚠️ Some agents failed individual tests")
+        print("\nWARNING: Some agents failed individual tests")
     
     # Test mock API (optional)
     mock_ok, test_incident = await test_mock_api()
@@ -174,32 +174,32 @@ async def main():
         workflow_ok = await test_parallel_workflow(test_incident)
         
         if workflow_ok:
-            print("\n🎉 ALL TESTS PASSED!")
-            print("✅ System is ready for production use")
+            print("\nSUCCESS: ALL TESTS PASSED!")
+            print("SUCCESS: System is ready for production use")
         else:
-            print("\n⚠️ Workflow test failed, but core components are working")
+            print("\nWARNING: Workflow test failed, but core components are working")
     else:
-        print("\n⚠️ Mock API not available - skipping workflow test")
-        print("💡 To test the full workflow, start the mock API server first")
+        print("\nWARNING: Mock API not available - skipping workflow test")
+        print("HINT: To test the full workflow, start the mock API server first")
     
-    print("\n📋 Test Summary:")
-    print(f"   • Configuration: {'✅' if config_ok else '❌'}")
-    print(f"   • Gemini AI: {'✅' if gemini_ok else '❌'}")
-    print(f"   • Individual Agents: {'✅' if agents_ok else '⚠️'}")
-    print(f"   • Mock API: {'✅' if mock_ok else '⚠️'}")
+    print("\nTest Summary:")
+    print(f"   • Configuration: {'PASS' if config_ok else 'FAIL'}")
+    print(f"   • Gemini AI: {'PASS' if gemini_ok else 'FAIL'}")
+    print(f"   • Individual Agents: {'PASS' if agents_ok else 'WARNING'}")
+    print(f"   • Mock API: {'PASS' if mock_ok else 'WARNING'}")
     
     if config_ok and gemini_ok:
-        print("\n🚀 Core system is functional!")
+        print("\nSUCCESS: Core system is functional!")
         print("   You can now run: python main.py --demo")
     else:
-        print("\n❌ Core system issues detected")
+        print("\nERROR: Core system issues detected")
         print("   Please fix configuration and try again")
 
 if __name__ == "__main__":
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
-        print("\n👋 Test interrupted!")
+        print("\nTest interrupted!")
     except Exception as e:
-        print(f"\n❌ Test error: {e}")
+        print(f"\nERROR: Test error: {e}")
         sys.exit(1)
