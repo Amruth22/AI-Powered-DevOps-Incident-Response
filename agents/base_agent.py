@@ -158,7 +158,7 @@ class BaseIncidentAgent(ABC):
         agent_name = self._get_agent_name()
         incident_id = incident_data.get("incident_id", "unknown")
         
-        self.logger.info(f"🤖 {agent_name.upper()} AGENT: {incident_id}")
+        self.logger.info(f"AGENT {agent_name.upper()}: {incident_id}")
         
         try:
             # Execute agent-specific analysis
@@ -171,11 +171,11 @@ class BaseIncidentAgent(ABC):
                 "timestamp": datetime.now().isoformat()
             })
             
-            self.logger.info(f"✅ {agent_name.title()} analysis complete")
+            self.logger.info(f"SUCCESS: {agent_name.title()} analysis complete")
             return result
             
         except Exception as e:
-            self.logger.error(f"❌ {agent_name.title()} agent error: {e}")
+            self.logger.error(f"ERROR: {agent_name.title()} agent error: {e}")
             return {
                 "agent": agent_name,
                 "error": str(e),
