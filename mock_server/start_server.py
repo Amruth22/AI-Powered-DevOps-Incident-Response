@@ -86,24 +86,24 @@ Examples:
             access_log=args.access_log
         )
     except KeyboardInterrupt:
-        print("\n👋 Mock DevOps APIs Server stopped")
+        print("\nMock DevOps APIs Server stopped")
     except Exception as e:
-        print(f"❌ Failed to start server: {e}")
+        print(f"ERROR: Failed to start server: {e}")
         sys.exit(1)
 
 def print_startup_banner(args):
     """Print startup banner with configuration info"""
     
-    print("🚀 Mock DevOps APIs Server for AI-Powered Incident Response")
+    print("Mock DevOps APIs Server for AI-Powered Incident Response")
     print("=" * 70)
-    print("🤖 AI-Optimized Features:")
+    print("AI-Optimized Features:")
     print("   • Parallel agent request support")
     print("   • Realistic data simulation with confidence scoring")
     print("   • Advanced chaos engineering with AI test patterns")
     print("   • Comprehensive mock API ecosystem (8 services)")
     print("   • Performance benchmarking and metrics")
     print()
-    print("🔧 Server Configuration:")
+    print("Server Configuration:")
     print(f"   • Host: {args.host}")
     print(f"   • Port: {args.port}")
     print(f"   • Workers: {args.workers}")
@@ -111,7 +111,7 @@ def print_startup_banner(args):
     print(f"   • Auto-reload: {'Enabled' if args.reload else 'Disabled'}")
     print(f"   • Access Log: {'Enabled' if args.access_log else 'Disabled'}")
     print()
-    print("📊 Available APIs:")
+    print("Available APIs:")
     print("   • Elasticsearch - Log analysis and search")
     print("   • Kubernetes - Container orchestration")
     print("   • Jira - Historical incident analysis")
@@ -122,29 +122,29 @@ def print_startup_banner(args):
     print("   • PagerDuty - Incident escalation")
     print("   • Chaos Engineering - Advanced incident generation")
     print()
-    print("🌐 Quick Access URLs:")
+    print("Quick Access URLs:")
     print(f"   • API Documentation: http://{args.host}:{args.port}/docs")
     print(f"   • Health Check: http://{args.host}:{args.port}/health")
     print(f"   • Generate Incident: POST http://{args.host}:{args.port}/chaos/generate-incident")
     print("=" * 70)
-    print("🎯 Ready for AI-powered incident response testing!")
+    print("Ready for AI-powered incident response testing!")
     print()
 
 def validate_environment():
     """Validate environment and dependencies"""
     
-    print("🔍 Validating environment...")
+    print("Validating environment...")
     
     # Check if we're in the right directory
     if not Path("main.py").exists():
-        print("❌ main.py not found. Please run from the mock_server directory.")
+        print("ERROR: main.py not found. Please run from the mock_server directory.")
         return False
     
     # Check required directories
     required_dirs = ["apis", "scenarios"]
     for dir_name in required_dirs:
         if not Path(dir_name).exists():
-            print(f"❌ Required directory '{dir_name}' not found.")
+            print(f"ERROR: Required directory '{dir_name}' not found.")
             return False
     
     # Check required files
@@ -164,7 +164,7 @@ def validate_environment():
     
     for file_path in required_files:
         if not Path(file_path).exists():
-            print(f"❌ Required file '{file_path}' not found.")
+            print(f"ERROR: Required file '{file_path}' not found.")
             return False
     
     # Try importing required modules
@@ -172,13 +172,13 @@ def validate_environment():
         import fastapi
         import uvicorn
         import faker
-        print("✅ All dependencies available")
+        print("SUCCESS: All dependencies available")
     except ImportError as e:
-        print(f"❌ Missing dependency: {e}")
-        print("💡 Install with: pip install fastapi uvicorn faker")
+        print(f"ERROR: Missing dependency: {e}")
+        print("HINT: Install with: pip install fastapi uvicorn faker")
         return False
     
-    print("✅ Environment validation passed")
+    print("SUCCESS: Environment validation passed")
     return True
 
 def check_port_availability(host: str, port: int) -> bool:
