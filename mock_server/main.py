@@ -40,7 +40,7 @@ incident_generator = IncidentGenerator()
 @app.get("/")
 async def root():
     return {
-        "message": "🚀 Mock DevOps APIs Server - AI-Powered Incident Response Ready!",
+        "message": "Mock DevOps APIs Server - AI-Powered Incident Response Ready!",
         "version": "2.0.0",
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
@@ -51,28 +51,28 @@ async def root():
             "chaos_engineering": "Advanced incident generation"
         },
         "available_apis": [
-            "🔍 /elasticsearch/search - Search logs with AI-friendly filters",
-            "🔍 /elasticsearch/logs/{service} - Get service-specific logs",
-            "☸️  /kubernetes/pods - List pods with health status",
-            "☸️  /kubernetes/pods/{pod}/logs - Get pod logs",
-            "☸️  /kubernetes/nodes - List cluster nodes",
-            "🎫 /jira/incidents - Get incident tickets",
-            "🎫 /jira/incidents/similar - AI-powered similar incident matching",
-            "💬 /slack/notify - Send AI-generated notifications",
-            "💬 /slack/create-incident-channel - Create incident channels",
-            "📊 /prometheus/query - Query metrics with AI context",
-            "📊 /prometheus/metrics/{service} - Get service metrics",
-            "📊 /prometheus/alerts - Get active alerts",
-            "☁️  /aws/cloudwatch/logs - Get CloudWatch logs",
-            "☁️  /aws/ec2/instances - List EC2 instances",
-            "🐕 /datadog/metrics - Get Datadog metrics",
-            "🐕 /datadog/service-summary/{service} - Get service summary",
-            "🐕 /datadog/dashboards - List dashboards",
-            "📟 /pagerduty/incidents - Get PagerDuty incidents",
-            "📟 /pagerduty/oncall-users - Get on-call users",
-            "🌪️  /chaos/generate-incident - Generate AI-testable incidents",
-            "🌪️  /chaos/generate-multi-service-incident - Multi-service incidents",
-            "🌪️  /chaos/active-incidents - Get active incidents for AI processing"
+            "/elasticsearch/search - Search logs with AI-friendly filters",
+            "/elasticsearch/logs/{service} - Get service-specific logs",
+            "/kubernetes/pods - List pods with health status",
+            "/kubernetes/pods/{pod}/logs - Get pod logs",
+            "/kubernetes/nodes - List cluster nodes",
+            "/jira/incidents - Get incident tickets",
+            "/jira/incidents/similar - AI-powered similar incident matching",
+            "/slack/notify - Send AI-generated notifications",
+            "/slack/create-incident-channel - Create incident channels",
+            "/prometheus/query - Query metrics with AI context",
+            "/prometheus/metrics/{service} - Get service metrics",
+            "/prometheus/alerts - Get active alerts",
+            "/aws/cloudwatch/logs - Get CloudWatch logs",
+            "/aws/ec2/instances - List EC2 instances",
+            "/datadog/metrics - Get Datadog metrics",
+            "/datadog/service-summary/{service} - Get service summary",
+            "/datadog/dashboards - List dashboards",
+            "/pagerduty/incidents - Get PagerDuty incidents",
+            "/pagerduty/oncall-users - Get on-call users",
+            "/chaos/generate-incident - Generate AI-testable incidents",
+            "/chaos/generate-multi-service-incident - Multi-service incidents",
+            "/chaos/active-incidents - Get active incidents for AI processing"
         ],
         "ai_optimization": {
             "incident_types": ["database_timeout", "memory_leak", "service_crash", "high_cpu", "network_issue", "disk_full"],
@@ -322,9 +322,9 @@ async def server_metrics():
     }
 
 if __name__ == "__main__":
-    print("🚀 Starting Mock DevOps APIs Server for AI-Powered Incident Response")
+    print("Starting Mock DevOps APIs Server for AI-Powered Incident Response")
     print("=" * 70)
-    print("🤖 AI-Optimized Features:")
+    print("AI-Optimized Features:")
     print("   • Parallel agent request support")
     print("   • Realistic data simulation")
     print("   • Advanced chaos engineering")
