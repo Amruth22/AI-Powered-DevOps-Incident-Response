@@ -1,24 +1,24 @@
-# 🚀 Mock DevOps APIs Server
+# Mock DevOps APIs Server
 
 **AI-Optimized Mock API Ecosystem for Incident Response Testing**
 
 A comprehensive mock server that simulates all major DevOps APIs with AI-friendly features, realistic data patterns, and advanced chaos engineering capabilities.
 
-## 🌟 **Key Features**
+## **Key Features**
 
-### **🤖 AI-Optimized Design**
+### **AI-Optimized Design**
 - **Parallel Agent Support** - Optimized for concurrent AI agent requests
 - **Confidence Scoring** - Built-in confidence metrics for AI decision making
 - **Realistic Data Patterns** - Production-like complexity without overwhelming AI systems
 - **Performance Benchmarking** - Built-in metrics for AI system evaluation
 
-### **📊 Comprehensive API Coverage**
+### **Comprehensive API Coverage**
 - **8 Major DevOps APIs** - Complete ecosystem simulation
 - **Advanced Chaos Engineering** - AI-testable incident generation
 - **Historical Data Simulation** - Pattern matching and learning capabilities
 - **Real-time Metrics** - Dynamic data generation with time-based patterns
 
-## 🏗️ **Architecture**
+## **Architecture**
 
 ```
 mock_server/
@@ -38,7 +38,7 @@ mock_server/
 └── README.md                 # This file
 ```
 
-## 🚀 **Quick Start**
+## **Quick Start**
 
 ### **Installation**
 ```bash
@@ -76,62 +76,62 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 python -m uvicorn main:app --reload
 ```
 
-## 📋 **API Endpoints**
+## **API Endpoints**
 
-### **🔍 Core Information**
+### **Core Information**
 - `GET /` - Server info and available endpoints
 - `GET /health` - Health check with service status
 - `GET /metrics` - Server metrics and statistics
 
-### **🔍 Elasticsearch Mock**
+### **Elasticsearch Mock**
 - `GET /elasticsearch/search` - Search logs with AI-friendly filters
 - `GET /elasticsearch/logs/{service}` - Service-specific logs with analysis
 
-### **☸️ Kubernetes Mock**
+### **Kubernetes Mock**
 - `GET /kubernetes/pods` - Pod status with health metrics
 - `GET /kubernetes/pods/{pod}/logs` - Pod logs for AI analysis
 - `GET /kubernetes/nodes` - Node health for diagnostics
 - `POST /kubernetes/pods/{pod}/restart` - Restart pod (remediation)
 
-### **🎫 Jira Mock**
+### **Jira Mock**
 - `GET /jira/incidents` - Historical incidents for pattern matching
 - `GET /jira/incidents/similar` - AI-powered similar incident matching
 - `POST /jira/incidents` - Create incident (AI-generated)
 
-### **💬 Slack Mock**
+### **Slack Mock**
 - `POST /slack/notify` - Send AI-generated notifications
 - `POST /slack/create-incident-channel` - Create incident coordination channel
 
-### **📊 Prometheus Mock**
+### **Prometheus Mock**
 - `GET /prometheus/query` - Query metrics with AI context
 - `GET /prometheus/metrics/{service}` - Service metrics for analysis
 - `GET /prometheus/alerts` - Active alerts for AI processing
 
-### **☁️ AWS Mock**
+### **AWS Mock**
 - `GET /aws/cloudwatch/logs` - CloudWatch logs for analysis
 - `GET /aws/ec2/instances` - EC2 instances for diagnostics
 - `POST /aws/ec2/instances/{id}/restart` - Restart instance (remediation)
 
-### **🐕 Datadog Mock**
+### **Datadog Mock**
 - `GET /datadog/metrics` - Comprehensive metrics for AI analysis
 - `GET /datadog/service-summary/{service}` - Service health summary
 - `GET /datadog/dashboards` - Dashboard information
 - `GET /datadog/alerts` - Alert management
 - `GET /datadog/logs` - Log analysis with AI insights
 
-### **📟 PagerDuty Mock**
+### **PagerDuty Mock**
 - `GET /pagerduty/incidents` - Incident management for AI analysis
 - `POST /pagerduty/incidents` - Create incident (AI-generated)
 - `POST /pagerduty/incidents/{id}/resolve` - Resolve incident
 - `GET /pagerduty/oncall-users` - On-call information for escalation
 
-### **🌪️ Chaos Engineering**
+### **Chaos Engineering**
 - `POST /chaos/generate-incident` - Generate AI-testable incidents
 - `POST /chaos/generate-multi-service-incident` - Complex multi-service incidents
 - `GET /chaos/active-incidents` - Active incidents for AI processing
 - `POST /chaos/resolve-incident/{id}` - Resolve with AI performance tracking
 
-## 🤖 **AI Optimization Features**
+## **AI Optimization Features**
 
 ### **Confidence Scoring**
 Every API response includes AI confidence metrics:
@@ -157,7 +157,7 @@ Every API response includes AI confidence metrics:
 - **Service Dependencies** - Realistic inter-service relationships
 - **Failure Correlations** - Cascading effects and root cause chains
 
-## 🌪️ **Advanced Chaos Engineering**
+## **Advanced Chaos Engineering**
 
 ### **Incident Types**
 - `database_timeout` - Connection and query timeouts
@@ -187,7 +187,7 @@ curl "http://localhost:8000/chaos/active-incidents"
 - **Complex** - Multi-factor issues, noise, lower confidence
 - **Multi-Service** - Cascading effects, coordination required
 
-## 📊 **Example Usage**
+## **Example Usage**
 
 ### **Basic Incident Generation**
 ```bash
@@ -250,7 +250,7 @@ curl -X POST "http://localhost:8000/chaos/resolve-incident/$INCIDENT_ID" \
   -d '{"resolution_method": "auto", "ai_performance_data": {"overall_confidence": 0.87}}'
 ```
 
-## 🔧 **Configuration Options**
+## **Configuration Options**
 
 ### **Server Configuration**
 ```bash
@@ -272,7 +272,7 @@ export MOCK_SERVER_PORT=8000
 export MOCK_SERVER_LOG_LEVEL=info
 ```
 
-## 📈 **Performance & Monitoring**
+## **Performance & Monitoring**
 
 ### **Built-in Metrics**
 - Request/response times
@@ -289,7 +289,7 @@ curl "http://localhost:8000/health"
 curl "http://localhost:8000/metrics"
 ```
 
-## 🧪 **Testing & Validation**
+## **Testing & Validation**
 
 ### **API Testing**
 ```bash
@@ -318,7 +318,7 @@ requests.post(f"http://localhost:8000/chaos/resolve-incident/{incident['incident
               json={"resolution_method": "auto", "ai_performance_data": ai_result})
 ```
 
-## 🔍 **Troubleshooting**
+## **Troubleshooting**
 
 ### **Common Issues**
 
@@ -356,7 +356,7 @@ python start_server.py --help
 open http://localhost:8000/docs
 ```
 
-## 🚀 **Integration with AI Systems**
+## **Integration with AI Systems**
 
 ### **Compatible with:**
 - **CrewAI Multi-Agent Systems** - Optimized for parallel agent workflows
@@ -370,14 +370,14 @@ open http://localhost:8000/docs
 - **Performance Benchmarking** - Automated AI system evaluation
 - **Realistic Complexity** - Production-like scenarios without overwhelming complexity
 
-## 📄 **API Documentation**
+## **API Documentation**
 
 Once the server is running, visit:
 - **Interactive Docs**: http://localhost:8000/docs
 - **ReDoc**: http://localhost:8000/redoc
 - **OpenAPI Schema**: http://localhost:8000/openapi.json
 
-## 🤝 **Contributing**
+## **Contributing**
 
 This mock server is designed to support AI-powered incident response systems. Contributions welcome for:
 - Additional API endpoints
@@ -385,7 +385,7 @@ This mock server is designed to support AI-powered incident response systems. Co
 - Performance optimizations
 - Documentation improvements
 
-## 📞 **Support**
+## **Support**
 
 For issues or questions:
 1. Check the interactive API documentation at `/docs`
@@ -395,4 +395,4 @@ For issues or questions:
 
 ---
 
-**🎯 Ready to power your AI-driven incident response system with realistic, comprehensive mock data!** 🚀
+**Ready to power your AI-driven incident response system with realistic, comprehensive mock data!**
