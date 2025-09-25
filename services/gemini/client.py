@@ -45,9 +45,9 @@ class GeminiLLM(LLM):
         # Initialize Gemini client
         try:
             self.client = genai.Client(api_key=self.api_key)
-            logger.info(f"✅ Gemini LLM initialized with model: {self.model}")
+            logger.info(f"SUCCESS: Gemini LLM initialized with model: {self.model}")
         except Exception as e:
-            logger.error(f"❌ Failed to initialize Gemini client: {e}")
+            logger.error(f"ERROR: Failed to initialize Gemini client: {e}")
             raise
     
     @property
@@ -64,7 +64,7 @@ class GeminiLLM(LLM):
     ) -> str:
         """Call the Gemini LLM with the given prompt."""
         try:
-            logger.debug(f"🔍 Sending prompt to Gemini (length: {len(prompt)} chars)")
+            logger.debug(f"Sending prompt to Gemini (length: {len(prompt)} chars)")
             
             # Prepare content for Gemini
             contents = [
@@ -96,14 +96,14 @@ class GeminiLLM(LLM):
             full_response = "".join(response_chunks)
             
             if not full_response.strip():
-                logger.warning("⚠️ Gemini returned empty response")
+                logger.warning("WARNING: Gemini returned empty response")
                 return "I apologize, but I couldn't generate a response. Please try again."
             
-            logger.debug(f"✅ Gemini response received (length: {len(full_response)} chars)")
+            logger.debug(f"SUCCESS: Gemini response received (length: {len(full_response)} chars)")
             return full_response.strip()
             
         except Exception as e:
-            logger.error(f"❌ Error calling Gemini LLM: {e}")
+            logger.error(f"ERROR: Error calling Gemini LLM: {e}")
             # Return a fallback response instead of raising exception
             return f"Error occurred while processing request: {str(e)}"
 
@@ -174,7 +174,7 @@ def test_gemini_connection(api_key: str = None) -> bool:
         True if connection successful, False otherwise
     """
     try:
-        logger.info("🧪 Testing Gemini LLM connection...")
+        logger.info("Testing Gemini LLM connection...")
         
         llm = get_detective_llm()
         
@@ -194,13 +194,13 @@ def test_gemini_connection(api_key: str = None) -> bool:
         response = llm._call(test_prompt)
         
         if response and len(response) > 50:
-            logger.info("✅ Gemini LLM connection test successful")
-            logger.info(f"📝 Sample response: {response[:100]}...")
+            logger.info("SUCCESS: Gemini LLM connection test successful")
+            logger.info(f"Sample response: {response[:100]}...")
             return True
         else:
-            logger.error("❌ Gemini LLM returned insufficient response")
+            logger.error("ERROR: Gemini LLM returned insufficient response")
             return False
             
     except Exception as e:
-        logger.error(f"❌ Gemini LLM connection test failed: {e}")
+        logger.error(f"ERROR: Gemini LLM connection test failed: {e}")
         return False
