@@ -91,8 +91,8 @@ def print_config_status():
     """Print current configuration status for debugging"""
     config = get_config()
     
-    print("🔧 CONFIGURATION STATUS:")
-    print(f"   • Gemini API Key: {'✅ Set' if config.gemini_api_key and config.gemini_api_key != 'your-gemini-api-key-here' else '❌ Missing'}")
+    print("CONFIGURATION STATUS:")
+    print(f"   • Gemini API Key: {'SET' if config.gemini_api_key and config.gemini_api_key != 'your-gemini-api-key-here' else 'MISSING'}")
     print(f"   • Gemini Model: {config.gemini_model}")
     print(f"   • Mock API URL: {config.mock_api_base_url}")
     print(f"   • Auto-Remediation Threshold: {config.auto_remediation_confidence_threshold}")
