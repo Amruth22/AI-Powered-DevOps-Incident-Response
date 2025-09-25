@@ -48,7 +48,7 @@ def setup_logging(log_level: str = None, log_file: str = None):
     logging.getLogger("urllib3").setLevel(logging.WARNING)
     logging.getLogger("google").setLevel(logging.WARNING)
     
-    logging.info(f"✅ Logging configured - Level: {log_level}, File: {log_file}")
+    logging.info(f"SUCCESS: Logging configured - Level: {log_level}, File: {log_file}")
 
 def get_logger(name: str) -> logging.Logger:
     """Get a logger with the specified name"""
