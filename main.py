@@ -67,8 +67,8 @@ Examples:
     
     # Check if .env file exists
     if not os.path.exists('.env'):
-        print("⚠️  .env file not found!")
-        print("\n💡 Setup Instructions:")
+        print("WARNING: .env file not found!")
+        print("\nSetup Instructions:")
         print("1. Copy the example file: cp .env.example .env")
         print("2. Edit .env and update GEMINI_API_KEY with your actual key")
         print("3. Get your API key from: https://makersuite.google.com/app/apikey")
@@ -78,10 +78,10 @@ Examples:
     # Validate configuration
     try:
         validate_config()
-        print("✅ Configuration validated successfully")
+        print("SUCCESS: Configuration validated successfully")
     except ValueError as e:
-        print(f"❌ Configuration Error: {e}")
-        print("\n🔧 Current Configuration Status:")
+        print(f"ERROR: Configuration Error: {e}")
+        print("\nCurrent Configuration Status:")
         print_config_status()
         sys.exit(1)
     
@@ -102,7 +102,7 @@ Examples:
 
 async def run_incident_response(alert_text: str):
     """Run the parallel multi-agent workflow"""
-    print("🚀 PARALLEL MULTI-AGENT INCIDENT RESPONSE")
+    print("PARALLEL MULTI-AGENT INCIDENT RESPONSE")
     print("=" * 50)
     start_time = datetime.now()
     
@@ -120,17 +120,17 @@ async def run_incident_response(alert_text: str):
         end_time = datetime.now()
         duration = (end_time - start_time).total_seconds()
         
-        print(f"\n⏱️ Workflow completed in {duration:.2f} seconds")
+        print(f"\nWorkflow completed in {duration:.2f} seconds")
         print_workflow_summary(result)
         
     except Exception as e:
-        print(f"❌ Workflow error: {e}")
+        print(f"ERROR: Workflow error: {e}")
         import traceback
         traceback.print_exc()
 
 async def run_test():
     """Run system test with generated incident"""
-    print("🧪 SYSTEM TEST - Parallel Multi-Agent Processing")
+    print("SYSTEM TEST - Parallel Multi-Agent Processing")
     print("=" * 50)
     
     try:
@@ -138,12 +138,12 @@ async def run_test():
         incident = mock_api_client.generate_incident("database_timeout")
         
         if "error" not in incident:
-            print(f"✅ Test incident generated: {incident['incident_id']}")
+            print(f"SUCCESS: Test incident generated: {incident['incident_id']}")
             
             # Process with parallel workflow
             result = await process_incident_parallel(incident)
             
-            print(f"\n🎯 TEST RESULTS:")
+            print(f"\nTEST RESULTS:")
             print(f"   • Success: {result.get('success', False)}")
             print(f"   • Method: {result.get('method', 'unknown')}")
             print(f"   • Confidence: {result.get('overall_confidence', 0):.2f}")
@@ -154,19 +154,19 @@ async def run_test():
             parallel_time = result.get('parallel_time_seconds', 0)
             estimated_sequential_time = parallel_time * 3  # 3 agents in parallel
             time_saved = estimated_sequential_time - parallel_time
-            print(f"   ⚡ Time saved by parallel execution: ~{time_saved:.2f}s")
+            print(f"   Time saved by parallel execution: ~{time_saved:.2f}s")
             
         else:
-            print("❌ Could not generate test incident")
-            print("💡 Make sure the mock API server is running:")
+            print("ERROR: Could not generate test incident")
+            print("HINT: Make sure the mock API server is running:")
             print("   python -m mock_apis.main  # If you have the mock server")
             
     except Exception as e:
-        print(f"❌ Test error: {e}")
+        print(f"ERROR: Test error: {e}")
 
 async def run_demo():
     """Run interactive demo with sample scenarios"""
-    print("🎬 INTERACTIVE DEMO - Parallel AI-Powered Incident Response")
+    print("INTERACTIVE DEMO - Parallel AI-Powered Incident Response")
     print("=" * 55)
     
     scenarios = [
@@ -204,11 +204,11 @@ async def run_demo():
             choice = input("\nSelect scenario (0-5): ").strip()
             
             if choice == "0":
-                print("👋 Demo completed!")
+                print("Demo completed!")
                 break
             elif choice in ["1", "2", "3", "4"]:
                 scenario = scenarios[int(choice) - 1]
-                print(f"\n🎯 Running scenario: {scenario['name']}")
+                print(f"\nRunning scenario: {scenario['name']}")
                 print(f"Alert: {scenario['alert']}")
                 print("-" * 50)
                 await run_incident_response(scenario['alert'])
@@ -218,20 +218,20 @@ async def run_demo():
                 if custom_alert:
                     await run_incident_response(custom_alert)
                 else:
-                    print("❌ No alert provided")
+                    print("ERROR: No alert provided")
                     
             else:
-                print("❌ Invalid choice. Please select 0-5.")
+                print("ERROR: Invalid choice. Please select 0-5.")
                 
         except KeyboardInterrupt:
-            print("\n👋 Demo interrupted!")
+            print("\nDemo interrupted!")
             break
         except Exception as e:
-            print(f"❌ Demo error: {e}")
+            print(f"ERROR: Demo error: {e}")
 
 async def run_interactive_mode():
     """Interactive mode for single incident processing"""
-    print("🚨 Parallel AI-Powered Incident Response System")
+    print("Parallel AI-Powered Incident Response System")
     print("=" * 45)
     print("Options:")
     print("  1. Process Incident Alert")
@@ -243,14 +243,14 @@ async def run_interactive_mode():
     choice = input("\nSelect option (0-4): ").strip()
     
     if choice == "0":
-        print("👋 Goodbye!")
+        print("Goodbye!")
         return
     elif choice == "1":
         alert = input("Enter incident alert: ").strip()
         if alert:
             await run_incident_response(alert)
         else:
-            print("❌ No alert provided")
+            print("ERROR: No alert provided")
     elif choice == "2":
         await run_demo()
     elif choice == "3":
@@ -258,7 +258,7 @@ async def run_interactive_mode():
     elif choice == "4":
         print_config_status()
     else:
-        print("❌ Invalid choice")
+        print("ERROR: Invalid choice")
 
 def extract_service_from_alert(alert: str) -> str:
     """Extract service name from alert text"""
@@ -292,7 +292,7 @@ def extract_type_from_alert(alert: str) -> str:
 
 def print_workflow_summary(result: dict):
     """Print a summary of workflow results"""
-    print(f"\n📋 WORKFLOW SUMMARY")
+    print(f"\nWORKFLOW SUMMARY")
     print("-" * 40)
     print(f"Incident ID: {result.get('incident_id', 'Unknown')}")
     print(f"Final Status: {result.get('status', 'Unknown').upper()}")
@@ -320,7 +320,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("\n👋 Application interrupted!")
+        print("\nApplication interrupted!")
     except Exception as e:
-        print(f"❌ Application error: {e}")
+        print(f"ERROR: Application error: {e}")
         sys.exit(1)
