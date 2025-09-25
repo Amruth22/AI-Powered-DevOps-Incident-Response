@@ -92,7 +92,7 @@ class RemediationAgent(BaseIncidentAgent):
         """Execute remediation actions (simulated)"""
         incident_type = incident_data.get('type', 'unknown')
         
-        self.logger.info(f"🔧 Executing remediation for {incident_type}...")
+        self.logger.info(f"Executing remediation for {incident_type}...")
         
         # Simulate different success rates based on incident type
         success_rates = {
@@ -114,7 +114,7 @@ class RemediationAgent(BaseIncidentAgent):
         success = random.random() < success_rate
         
         if success:
-            self.logger.info(f"✅ Remediation successful for {incident_type}")
+            self.logger.info(f"SUCCESS: Remediation successful for {incident_type}")
             return {
                 "success": True,
                 "execution_time": execution_time,
@@ -122,7 +122,7 @@ class RemediationAgent(BaseIncidentAgent):
                 "verification": "System health checks passed"
             }
         else:
-            self.logger.warning(f"❌ Remediation failed for {incident_type}")
+            self.logger.warning(f"ERROR: Remediation failed for {incident_type}")
             return {
                 "success": False,
                 "execution_time": execution_time,
