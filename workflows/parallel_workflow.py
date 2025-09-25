@@ -55,16 +55,16 @@ class ParallelIncidentWorkflow:
             "avg_workflow_time": 0.0
         }
         
-        logger.info("🚀 Parallel Incident Workflow initialized with 6 agents")
+        logger.info("Parallel Incident Workflow initialized with 6 agents")
     
     async def process_incident(self, incident_data: Dict[str, Any]) -> Dict[str, Any]:
         """Process incident using parallel multi-agent workflow"""
         incident_id = incident_data.get("incident_id", "unknown")
         
-        logger.info(f"🚨 PARALLEL PROCESSING: {incident_id}")
-        logger.info(f"   📋 Type: {incident_data.get('type', 'unknown')}")
-        logger.info(f"   🏢 Service: {incident_data.get('service', 'unknown')}")
-        logger.info(f"   ⚠️  Severity: {incident_data.get('severity', 'unknown')}")
+        logger.info(f"PARALLEL PROCESSING: {incident_id}")
+        logger.info(f"   Type: {incident_data.get('type', 'unknown')}")
+        logger.info(f"   Service: {incident_data.get('service', 'unknown')}")
+        logger.info(f"   Severity: {incident_data.get('severity', 'unknown')}")
         
         workflow_start = time.time()
         
@@ -73,7 +73,7 @@ class ParallelIncidentWorkflow:
         
         try:
             # Phase 1: PARALLEL ANALYSIS - Run Detective, Diagnostics, Historical concurrently
-            logger.info(f"🚀 PHASE 1: PARALLEL ANALYSIS (Detective + Diagnostics + Historical)")
+            logger.info(f"PHASE 1: PARALLEL ANALYSIS (Detective + Diagnostics + Historical)")
             
             parallel_start = time.time()
             
@@ -104,22 +104,22 @@ class ParallelIncidentWorkflow:
             add_agent_result(state, "diagnostics", diagnostics_result)
             add_agent_result(state, "historical", historical_result)
             
-            logger.info(f"   ✅ PARALLEL EXECUTION COMPLETE in {parallel_time:.2f}s")
-            logger.info(f"   📊 Detective: {detective_result.get('confidence', 0):.2f} confidence")
-            logger.info(f"   🔧 Diagnostics: {diagnostics_result.get('health_score', 0):.2f} health score")
-            logger.info(f"   📚 Historical: {historical_result.get('pattern_confidence', 0):.2f} pattern confidence")
+            logger.info(f"   PARALLEL EXECUTION COMPLETE in {parallel_time:.2f}s")
+            logger.info(f"   Detective: {detective_result.get('confidence', 0):.2f} confidence")
+            logger.info(f"   Diagnostics: {diagnostics_result.get('health_score', 0):.2f} health score")
+            logger.info(f"   Historical: {historical_result.get('pattern_confidence', 0):.2f} pattern confidence")
             
             # Log any agent errors
             for result in [detective_result, diagnostics_result, historical_result]:
                 if not result.get('success', True):
-                    logger.warning(f"   ⚠️ {result.get('agent', 'Unknown')} agent had errors: {result.get('error', 'Unknown error')}")
+                    logger.warning(f"   WARNING: {result.get('agent', 'Unknown')} agent had errors: {result.get('error', 'Unknown error')}")
             
             # Calculate overall confidence
             overall_confidence = calculate_overall_confidence(state)
-            logger.info(f"📈 OVERALL CONFIDENCE: {overall_confidence:.2f}")
+            logger.info(f"OVERALL CONFIDENCE: {overall_confidence:.2f}")
             
             # Phase 2: REMEDIATION PLANNING
-            logger.info(f"🤖 PHASE 2: REMEDIATION PLANNING")
+            logger.info(f"PHASE 2: REMEDIATION PLANNING")
             
             try:
                 remediation_result = await self.agents["remediation"].execute_async(state)
@@ -131,10 +131,10 @@ class ParallelIncidentWorkflow:
             
             add_agent_result(state, "remediation", remediation_result)
             
-            logger.info(f"   ✅ Remediation: {remediation_result.get('remediation_confidence', 0):.2f} remediation confidence")
+            logger.info(f"   Remediation: {remediation_result.get('remediation_confidence', 0):.2f} remediation confidence")
             
             # Phase 3: COMMUNICATION PLANNING
-            logger.info(f"📢 PHASE 3: COMMUNICATION PLANNING")
+            logger.info(f"PHASE 3: COMMUNICATION PLANNING")
             
             try:
                 communication_result = await self.agents["communication"].execute_async(state)
@@ -146,10 +146,10 @@ class ParallelIncidentWorkflow:
             
             add_agent_result(state, "communication", communication_result)
             
-            logger.info(f"   ✅ Communication: {communication_result.get('communication_confidence', 0):.2f} communication confidence")
+            logger.info(f"   Communication: {communication_result.get('communication_confidence', 0):.2f} communication confidence")
             
             # Phase 4: EXECUTION DECISION
-            logger.info(f"⚡ PHASE 4: EXECUTION DECISION")
+            logger.info(f"PHASE 4: EXECUTION DECISION")
             
             should_auto_remediate = self._should_auto_remediate(
                 overall_confidence,
@@ -158,7 +158,7 @@ class ParallelIncidentWorkflow:
             )
             
             if should_auto_remediate:
-                logger.info(f"   ✅ PARALLEL AUTO-REMEDIATION APPROVED")
+                logger.info(f"   PARALLEL AUTO-REMEDIATION APPROVED")
                 
                 # Execute remediation
                 try:
@@ -169,13 +169,13 @@ class ParallelIncidentWorkflow:
                 
                 if remediation_execution.get('success', False):
                     self.metrics["auto_remediated_count"] += 1
-                    logger.info(f"   🎉 PARALLEL AUTO-REMEDIATION SUCCESSFUL!")
+                    logger.info(f"   PARALLEL AUTO-REMEDIATION SUCCESSFUL!")
                     
                     # Mark as resolved
                     mark_incident_resolved(state, "parallel_auto_remediation")
                     
                     # Phase 5: Post-Mortem Analysis (for successful resolutions)
-                    logger.info(f"📝 PHASE 5: POST-MORTEM ANALYSIS")
+                    logger.info(f"PHASE 5: POST-MORTEM ANALYSIS")
                     
                     try:
                         postmortem_result = await self.agents["postmortem"].execute_async(state)
@@ -187,7 +187,7 @@ class ParallelIncidentWorkflow:
                     
                     add_agent_result(state, "postmortem", postmortem_result)
                     
-                    logger.info(f"   ✅ Post-Mortem: {postmortem_result.get('documentation_confidence', 0):.2f} documentation confidence")
+                    logger.info(f"   Post-Mortem: {postmortem_result.get('documentation_confidence', 0):.2f} documentation confidence")
                     
                     workflow_time = time.time() - workflow_start
                     
@@ -204,7 +204,7 @@ class ParallelIncidentWorkflow:
                     }
                 else:
                     self.metrics["escalated_count"] += 1
-                    logger.info(f"   ❌ REMEDIATION FAILED - ESCALATING")
+                    logger.info(f"   REMEDIATION FAILED - ESCALATING")
                     
                     # Mark as escalated
                     mark_incident_escalated(state, "Remediation execution failed")
@@ -222,7 +222,7 @@ class ParallelIncidentWorkflow:
                         "agent_results": state.get("agent_analyses", {})
                     }
             else:
-                logger.info(f"   🆘 PARALLEL ESCALATING TO HUMAN")
+                logger.info(f"   PARALLEL ESCALATING TO HUMAN")
                 logger.info(f"      • Overall confidence: {overall_confidence:.2f}")
                 logger.info(f"      • Remediation confidence: {remediation_result.get('remediation_confidence', 0):.2f}")
                 
@@ -258,7 +258,7 @@ class ParallelIncidentWorkflow:
             return result
             
         except Exception as e:
-            logger.error(f"   ❌ PARALLEL WORKFLOW ERROR: {e}")
+            logger.error(f"   ERROR: PARALLEL WORKFLOW ERROR: {e}")
             workflow_time = time.time() - workflow_start
             return {
                 "incident_id": incident_id,
