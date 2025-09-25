@@ -16,7 +16,7 @@
 - **Production-ready architecture** - You will create proper separation of concerns
 - **Mock API integration** - You will develop testing and development frameworks
 
-## 🏗️ **Professional Architecture**
+## **Professional Architecture**
 
 ```
 AI-Powered-DevOps-Incident-Response/
@@ -49,7 +49,7 @@ AI-Powered-DevOps-Incident-Response/
 └── ARCHITECTURE.md          # System architecture documentation
 ```
 
-## 🔄 **Workflow Overview**
+## **Workflow Overview**
 
 ```
 Incident Alert
