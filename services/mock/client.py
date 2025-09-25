@@ -34,7 +34,7 @@ class MockAPIClient:
             return response.json()
             
         except requests.exceptions.RequestException as e:
-            logger.error(f"❌ Mock API request failed: {e}")
+            logger.error(f"ERROR: Mock API request failed: {e}")
             return {"error": str(e), "success": False}
     
     # ============================================================================
@@ -59,7 +59,7 @@ class MockAPIClient:
             else:
                 return []
         except Exception as e:
-            logger.error(f"❌ Error getting incidents: {e}")
+            logger.error(f"ERROR: Error getting incidents: {e}")
             return []
     
     # ============================================================================
