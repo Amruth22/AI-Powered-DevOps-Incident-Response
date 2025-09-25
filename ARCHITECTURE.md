@@ -1,10 +1,10 @@
-# 🏗️ System Architecture Documentation
+# System Architecture Documentation
 
-## 📋 **Overview**
+## **Overview**
 
 This document describes the professional architecture of the **AI-Powered DevOps Incident Response System**, designed with **parallel multi-agent execution**, **CrewAI integration**, and **clean separation of concerns**.
 
-## 🎯 **Design Principles**
+## **Design Principles**
 
 ### **1. Separation of Concerns**
 - **Core**: Configuration and state management
@@ -23,7 +23,7 @@ This document describes the professional architecture of the **AI-Powered DevOps
 - Consistent async execution patterns
 - Standardized error handling and logging
 
-## 📁 **Directory Structure**
+## **Directory Structure**
 
 ```
 AI-Powered-DevOps-Incident-Response/
@@ -69,7 +69,7 @@ AI-Powered-DevOps-Incident-Response/
 └── ARCHITECTURE.md         # This file
 ```
 
-## 🔄 **Parallel Multi-Agent Workflow Diagram**
+## **Parallel Multi-Agent Workflow Diagram**
 
 ```mermaid
 graph TD
@@ -162,7 +162,7 @@ graph TD
     class START,PARALLEL,COORD,SUMMARY,WAIT,COMM_ESCALATE defaultNode
 ```
 
-## 🤖 **Agent Architecture**
+## **Agent Architecture**
 
 ### **Parallel Execution Pattern**
 ```python
@@ -192,7 +192,7 @@ communication_result = await communication_agent.execute_async(state)
 - **Graceful Degradation**: Default confidence scores used when agents fail
 - **Comprehensive Logging**: All errors logged with context
 
-## 🔧 **Service Architecture**
+## **Service Architecture**
 
 ### **Service Abstraction Layers**
 
@@ -214,7 +214,7 @@ communication_result = await communication_agent.execute_async(state)
 - **Error Resilience**: Graceful handling of service failures
 - **Configuration Management**: Environment-based service configuration
 
-## 📊 **State Management**
+## **State Management**
 
 ### **Incident State Flow**
 1. **Initial State**: Created by `create_incident_state()`
@@ -257,7 +257,7 @@ communication_result = await communication_agent.execute_async(state)
 }
 ```
 
-## 🚀 **Parallel Workflow Orchestration**
+## **Parallel Workflow Orchestration**
 
 ### **Performance Characteristics**
 
@@ -291,28 +291,28 @@ Total:                          ~12-18 seconds
 
 ### **Parallel Agent Specifications**
 
-#### **🕵️ Detective Agent**
+#### **Detective Agent**
 - **Execution Time**: ~4-6 seconds
 - **AI Integration**: Gemini 2.0 Flash with investigation prompts
 - **Data Sources**: Mock API logs, metrics, system data
 - **Output**: Confidence score (0.0-1.0), root cause analysis, evidence
 - **Temperature**: 0.1 (precise analysis)
 
-#### **🔧 Diagnostics Agent**
+#### **Diagnostics Agent**
 - **Execution Time**: ~3-5 seconds
 - **AI Integration**: Gemini 2.0 Flash with system health prompts
 - **Data Sources**: Kubernetes pods, Prometheus alerts, system metrics
 - **Output**: Health score (0.0-1.0), resource analysis, bottlenecks
 - **Temperature**: 0.05 (technical accuracy)
 
-#### **📚 Historical Agent**
+#### **Historical Agent**
 - **Execution Time**: ~2-4 seconds
 - **AI Integration**: Gemini 2.0 Flash with pattern matching prompts
 - **Data Sources**: Jira incidents, PagerDuty history, similar patterns
 - **Output**: Pattern confidence (0.0-1.0), similar incidents, solutions
 - **Temperature**: 0.2 (pattern recognition)
 
-## 🎯 **Decision Making Logic**
+## **Decision Making Logic**
 
 ### **Multi-Dimensional Decision Matrix**
 
@@ -333,7 +333,7 @@ def should_auto_remediate(overall_confidence, remediation_confidence, severity):
     )
 ```
 
-## 🔒 **Security & Configuration**
+## **Security & Configuration**
 
 ### **Environment-Based Configuration**
 - **`.env` file**: Secure credential storage
@@ -351,7 +351,7 @@ MAX_RETRIES=3
 LOG_LEVEL=INFO
 ```
 
-## 📈 **Scalability Design**
+## **Scalability Design**
 
 ### **Horizontal Scaling**
 - **Stateless agent design**: No persistent state between executions
@@ -368,7 +368,7 @@ LOG_LEVEL=INFO
 - **Additional services**: Add to `services/` directory
 - **Custom workflows**: Extend `workflows/` with new orchestration patterns
 
-## 🧪 **Testing Strategy**
+## **Testing Strategy**
 
 ### **System Testing**
 ```bash
@@ -389,7 +389,7 @@ python main.py --test
 - **Individual agents**: Isolated agent functionality
 - **Parallel workflow**: End-to-end workflow execution
 
-## 📋 **Maintenance & Operations**
+## **Maintenance & Operations**
 
 ### **Logging Strategy**
 - **Structured logging**: Consistent format across all components
@@ -418,7 +418,7 @@ python main.py "incident description"
 python main.py --demo
 ```
 
-## 🔄 **Component Interactions**
+## **Component Interactions**
 
 ### **1. Workflow Orchestration**
 ```
@@ -435,24 +435,24 @@ BaseIncidentAgent.execute_async() → Agent.analyze_async() → Service calls �
 Agent → Service Client → External API/Mock → Response Processing → State Update
 ```
 
-## 🏆 **Architecture Benefits**
+## **Architecture Benefits**
 
-### **✅ Performance**
+### **Performance**
 - **3x faster analysis** through parallel agent execution
 - **Efficient resource utilization** with async operations
 - **Scalable design** for high-volume incident processing
 
-### **✅ Maintainability**
+### **Maintainability**
 - **Clean separation of concerns** with modular design
 - **Standardized interfaces** for consistent development
 - **Comprehensive error handling** for reliability
 
-### **✅ Testability**
+### **Testability**
 - **Service abstraction** for easy mocking
 - **Individual agent testing** for isolated validation
 - **End-to-end testing** for workflow verification
 
-### **✅ Production Readiness**
+### **Production Readiness**
 - **Environment-based configuration** for deployment flexibility
 - **Comprehensive logging** for operational visibility
 - **Graceful error handling** for system reliability
